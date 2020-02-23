@@ -1,12 +1,12 @@
 module scTenifoldNet
 
-using Statistics, LinearAlgebra, Arpack, TensorToolbox, Random
-export pcnet
+using Statistics, LinearAlgebra, Arpack, TensorToolbox, Random, Distributed
+export pcnet, tensordecomp, manialn, drtenifold
 
 function pcnet(X)
     n=size(X,2)
     A=1.0 .-Matrix(I,n,n)
-    for k in 1:n        
+    @sync @distributed for k in 1:n        
         y=X[:,k]
         𝒳=X[:,1:end.≠k]
         _,ϕ=Arpack.eigs(𝒳'𝒳,nev=3,which=:LM)
@@ -47,7 +47,7 @@ function manialn(X,Y)
     return sortperm(-dd)    
 end
 
-function rdtenifold(X)
+function drtenifold(X)
     lbsz=sum(X,dims=1)
     X ./=lbsz
     X .*=median(lbsz)

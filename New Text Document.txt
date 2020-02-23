@@ -1,0 +1,2 @@
+# Check for EmpiricalBayes package
+EB_EXISTS = in("EmpiricalBayes",keys(Pkg.installed())) ? true : false
