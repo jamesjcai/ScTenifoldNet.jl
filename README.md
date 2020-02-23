@@ -21,7 +21,6 @@ The simplest way is to just call the `transform` function with an array of numbe
 julia> using LinearAlgebra, Statistics, Distributions, Random, Arpack, TensorToolbox
 
 julia> using scTenifoldNet
-
 ```
 Available functions:
 --------------------
@@ -41,33 +40,30 @@ Example:
 --------
 #### Loading scTenifoldNet
 Once installed, **scTenifoldNet** can be loaded typing:
-```{r}
-library(scTenifoldNet)
+```{julia}
+using scTenifoldNet
 ```
 
 #### Simulating of a dataset 
-Here we simulate a dataset of 2000 cells (columns) and 100 genes (rows) following the negative binomial distribution with high sparsity (~67%). We label the last ten genes as mitochondrial genes ('mt-') to perform single-cell quality control.
-```{r}
-nCells = 2000
-nGenes = 100
-set.seed(1)
-X <- rnbinom(n = nGenes * nCells, size = 20, prob = 0.98)
-X <- round(X)
-X <- matrix(X, ncol = nCells)
-rownames(X) <- c(paste0('ng', 1:90), paste0('mt-', 1:10))
+Here we simulate a dataset of 2000 cells (columns) and 100 genes (rows) following the negative binomial distribution with high sparsity (~67%).
+```{julia}
+d=NegativeBinomial(20,0.98)
+X=rand(d,100,2000)
 ```
 
 #### Generating a perturbed network 
 We generate a perturbed network modifying the expression of genes 10, 2, and 3 and replacing them with the expression of genes 50, 11, and 5.
-```{r}
-Y <- X
-Y[10,] <- Y[50,]
-Y[2,] <- Y[11,]
-Y[3,] <- Y[5,]
+```{julia}
+Y=copy(X)
+Y[10,:]=Y[50,:]
+Y[11,:]=Y[20,:]
+
+X=X[:,vec(sum(X,dims=1).>30)]
+Y=Y[:,vec(sum(Y,dims=1).>30)]
 ```
 #### scTenifoldNet
 Here we run **scTenifoldNet** under the H0 (there is no change in the regulation of the gene) using the same matrix as input and under the HA (there is a change in the regulation of the genes) using the control and the perturbed network.
-```{r}
+```{julia}
 outputH0 <- scTenifoldNet(X = X, Y = X,
                           nc_nNet = 10, nc_nCells = 500,
                           td_K = 3, qc_minLibSize = 30,
@@ -111,7 +107,7 @@ head(outputHA$diffRegulation, n = 10)
 #### Plotting the results
 Results can be easily displayed using quantile-quantile plots. Here we labeled in red the identified perturbed genes with FDR < 0.05.
 ![Example](https://raw.githubusercontent.com/cailab-tamu/scTenifoldNet/master/inst/readmeExample.png)
-```{r}
+```{julia}
 par(mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(1.5,0.5,0))
 geneColor <- ifelse(outputH0$diffRegulation$p.adj < 0.05, 'red', 'black')
 qqnorm(outputH0$diffRegulation$Z, pch = 16, main = 'H0', col = geneColor)
@@ -141,4 +137,4 @@ A BibTeX entry for LaTeX users is
     url = {https://CRAN.R-project.org/package=scTenifoldNet},
   }
   ```
-  
+
