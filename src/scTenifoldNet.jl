@@ -23,7 +23,7 @@ function tensordecomp(X)
     𝒯=TensorToolbox.cp_als(X,5)
     𝕏=full(𝒯)
     A=mean(𝕏[:,:,i] for i=1:size(𝕏,3))
-    A ./=maximum(abs.(A))
+    # A ./=maximum(abs.(A))
     # A=round.(A; digits=5)
     return A
 end
@@ -49,8 +49,7 @@ end
 
 function drtenifold(X)
     lbsz=sum(X,dims=1)
-    X ./=lbsz
-    X .*=median(lbsz)
+    X=(X./lbsz)*median(lbsz)
     ℊ,𝒸=size(X)
     A=zeros(Float64, ℊ, ℊ, 10)
     for k=1:10
