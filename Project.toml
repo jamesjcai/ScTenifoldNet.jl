@@ -1,0 +1,4 @@
+name = "scTenifoldNet"
+uuid = "8707e194-616b-4c04-957e-bf382f698cfa"
+authors = ["James Cai <jamescai@genomezoo.net>"]
+version = "0.1.0"
