@@ -6,7 +6,7 @@ export pcnet, tensordecomp, manialn, drtenifold
 function pcnet(X)
     n=size(X,2)
     A=1.0 .-Matrix(I,n,n)
-    @sync @distributed for k in 1:n        
+    for k in 1:n
         y=X[:,k]
         𝒳=X[:,1:end.≠k]
         _,ϕ=Arpack.eigs(𝒳'𝒳,nev=3,which=:LM)
