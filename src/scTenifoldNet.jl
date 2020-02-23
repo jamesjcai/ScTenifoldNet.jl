@@ -20,12 +20,12 @@ function pcnet(X)
 end
 
 function tensordecomp(X)
-    a=TensorToolbox.cp_als(X,5)
-    Z=full(a)
-    Z1=mean(Z[:,:,i] for i=1:size(Z,3))
-    Z1=Z1./maximum(abs.(Z1));
-    # Z1=round.(Z1; digits=5)
-    return Z1
+    𝒯=TensorToolbox.cp_als(X,5)
+    𝕏=full(𝒯)
+    A=mean(𝕏[:,:,i] for i=1:size(𝕏,3))
+    A ./=maximum(abs.(A))
+    # A=round.(A; digits=5)
+    return A
 end
 
 function manialn(X,Y)
@@ -47,15 +47,16 @@ function manialn(X,Y)
     return sortperm(-dd)    
 end
 
-function dddtenifold(X)
+function rdtenifold(X)
     lbsz=sum(X,dims=1)
-    X=(X./lbsz)*median(lbsz)
+    X ./=lbsz
+    X .*=median(lbsz)
     ℊ,𝒸=size(X)
     A=zeros(Float64, ℊ, ℊ, 10)
     for k=1:10
         println("network ... $k")
         𝕩=X[:,randperm(𝒸)][:,1:500]
-        A[:,:,k]=pcnetworkhelp(𝕩')
+        A[:,:,k]=pcnet(𝕩')
     end
     Z=tensordecomp(A)
     return Z
