@@ -1,7 +1,7 @@
 module scTenifoldNet
 
 using Statistics, LinearAlgebra, Arpack, TensorToolbox, Random, Distributed
-export pcnet, tensordecomp, manialn, drtenifold
+export sctenifoldnet, pcnet, tensordecomp, manialn
 
 function pcnet(X)
     n=size(X,2)
@@ -14,7 +14,7 @@ function pcnet(X)
         s ./=((norm.(s[:,i] for i=1:size(s,2))).^2)'
         b=sum(y.*s, dims=1)
         𝒷=ϕ*b'
-        A[k,A[k,:].==1.0]=𝒷
+        @inbounds A[k,A[k,:].==1.0]=𝒷
     end
     return A
 end
@@ -47,15 +47,15 @@ function manialn(X,Y)
     return sortperm(-dd)    
 end
 
-function drtenifold(X)
+function sctenifoldnet(X)
     lbsz=sum(X,dims=1)
     X=(X./lbsz)*median(lbsz)
     ℊ,𝒸=size(X)
     A=zeros(Float64, ℊ, ℊ, 10)
     for k=1:10
-        println("network ... $k")
+        # println("network ... $k")
         𝕩=X[:,randperm(𝒸)][:,1:500]
-        A[:,:,k]=pcnet(𝕩')
+        @inbounds A[:,:,k]=pcnet(𝕩')
     end
     Z=tensordecomp(A)
     return Z
