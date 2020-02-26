@@ -3,7 +3,7 @@ module scTenifoldNet
 using Statistics, LinearAlgebra, Arpack, TensorToolbox, Random, Distributed
 export sctenifoldnet, pcnet, tensordecomp, manialn
 
-function pcnet(X)
+function pcnet(X::AbstractMatrix{T}) where T
     n=size(X,2)
     A=1.0 .-Matrix(I,n,n)
     for k in 1:n
@@ -19,8 +19,8 @@ function pcnet(X)
     return A
 end
 
-function tensordecomp(X)
-    𝒯=TensorToolbox.cp_als(X,5)
+function tensordecomp(Λ)
+    𝒯=TensorToolbox.cp_als(Λ,5)
     𝕏=full(𝒯)
     A=mean(𝕏[:,:,i] for i=1:size(𝕏,3))
     # A ./=maximum(abs.(A))
@@ -47,7 +47,7 @@ function manialn(X,Y)
     return sortperm(-dd)    
 end
 
-function sctenifoldnet(X)
+function sctenifoldnet(X::AbstractMatrix{T}) where T
     lbsz=sum(X,dims=1)
     X=(X./lbsz)*median(lbsz)
     ℊ,𝒸=size(X)
