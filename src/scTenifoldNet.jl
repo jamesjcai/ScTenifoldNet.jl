@@ -1,9 +1,25 @@
 module scTenifoldNet
 
-using Statistics, LinearAlgebra, Arpack, TensorToolbox, Random, Distributed
-export sctenifoldnet, pcnet, tensordecomp, manialn
+using Statistics, LinearAlgebra, Arpack, TensorToolbox, Random, Distributed, TSVD
+export sctenifoldnet, pcnet, tensordecomp, manialn, pcnetsingle
 
-function pcnet(X::AbstractMatrix{T}) where T
+function pcnet(X::AbstractMatrix{T}, p::Int64=3) where T
+    n=size(X,2)
+    A=1.0 .-Matrix(I,n,n)
+    Threads.@threads for k in 1:n   
+        y=X[:,k]
+        𝒳=X[:,1:end.≠k]
+        ϕ=TSVD.tsvd(𝒳,p)[3];
+        s=𝒳*ϕ
+        s ./= (norm.(s[:,i] for i=1:size(s,2)).^2)'
+        b=sum(y.*s,dims=1)    
+        𝒷=ϕ*b'
+        @inbounds A[k,A[k,:].==1.0]=𝒷
+    end
+    return A
+  end
+
+function pcnetsingle(X::AbstractMatrix{T}) where T
     n=size(X,2)
     A=1.0 .-Matrix(I,n,n)
     for k in 1:n
