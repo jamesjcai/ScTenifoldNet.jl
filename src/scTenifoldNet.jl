@@ -3,6 +3,14 @@ module scTenifoldNet
 using Statistics, LinearAlgebra, Arpack, TensorToolbox, Random, Distributed, TSVD
 export sctenifoldnet, pcnet, tensordecomp, manialn, pcnetsingle
 
+
+vecnorm(x) = x./norm.(x[:,i] for i in 1:size(x,2))'
+function vecnorm!(x)
+    for i in 1:size(x,2)
+        x[:,i]=x[:,i]./norm(x[:,i])
+    end    
+end
+
 function pcnet(X::AbstractMatrix{T}, p::Int64=3) where T
     n=size(X,2)
     A=1.0 .-Matrix(I,n,n)
@@ -24,8 +32,10 @@ function pcnetsingle(X::AbstractMatrix{T}) where T
     A=1.0 .-Matrix(I,n,n)
     for k in 1:n
         y=X[:,k]
-        𝒳=X[:,1:end.≠k]
-        _,ϕ=Arpack.eigs(𝒳'𝒳,nev=3,which=:LM)
+        𝒳=X[:,1:end.≠k]        
+        F=Arpack.svds(𝒳,nsv=4)[1]
+        ϕ=F.V[:,1:3]
+        # _,ϕ=Arpack.eigs(𝒳'𝒳,nev=3,which=:LM)
         s=𝒳*ϕ
         s ./=((norm.(s[:,i] for i=1:size(s,2))).^2)'
         b=sum(y.*s, dims=1)
