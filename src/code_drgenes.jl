@@ -1,6 +1,6 @@
 # ] add https://github.com/tk3369/BoxCoxTrans.jl
 # ] add UnicodePlots
-using Distributions, UnicodePlots, BoxCoxTrans, MultipleTesting
+using Distributions, UnicodePlots, MultipleTesting
 
 """
 x = rand(Gamma(2,2), 10000) .+ 1;
@@ -22,16 +22,13 @@ using Statistics, StatsBase
 d=rand(30)
 zscore(d)
 (d.-mean(d))./std(d) == zscore(d)
-d²=d.^2
-FC=d²./mean(d²)
-
 1-cdf(Chisq(1),7.8)==ccdf(Chisq(1),7.8)
 
 
-
+d²=d.^2
+FC=d²./mean(d²)
 pvals = ccdf.(Chisq(1),FC)
 pAdjusted = MultipleTesting.adjust(pvals, BenjaminiHochberg())
-
 
 # https://stats.stackexchange.com/questions/171074/chi-square-test-why-is-the-chi-squared-test-a-one-tailed-test
 
@@ -58,3 +55,25 @@ for data in (data1, data2)
     println("Data:\n$data")
     println("Hypothesis test: the original population is ", (eqdist(data) ? "" : "not "), "uniform.\n")
 end
+
+using StatPlots
+
+
+x = rand(Normal(), 100) 
+y = rand(Cauchy(), 100)
+plot(
+    qqplot(x, y),
+    qqnorm(x, smooth = true)
+)
+
+
+x = rand(Normal(), 100)
+y = rand(Cauchy(), 100)
+
+plot(
+ qqplot(x, y, qqline = :fit), # qqplot of two samples, show a fitted regression line
+ qqplot(Cauchy, y),           # compare with a Cauchy distribution fitted to y; pass an instance (e.g. Normal(0,1)) to compare with a specific distribution
+ qqnorm(x, qqline = :R)       # the :R default line passes through the 1st and 3rd quartiles of the distribution
+)
+
+qqplot(Normal(3,5), y)
