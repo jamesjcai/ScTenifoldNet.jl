@@ -1,53 +1,42 @@
 module scTenifoldNet
 
-using Statistics, LinearAlgebra, Arpack, TensorToolbox, Random, Distributed, TSVD
-export sctenifoldnet, pcnet, tensordecomp, manialn, pcnetsingle
+using Statistics, LinearAlgebra, Distributions, MultipleTesting, Random
+import TSVD
+import TensorToolbox
 
+export tenrnet, manialn, drgenes
 
-vecnorm(x) = x./norm.(x[:,i] for i in 1:size(x,2))'
+const NCOMP1,NCOMP2=3,5
+const NLAYERS,NCELLS=10,500
+
+# vecnorm(x) = x./norm.(x[:,i] for i in 1:size(x,2))'
+vecnorm(x) = norm.(x[:,i] for i in 1:size(x,2))
 function vecnorm!(x)
     for i in 1:size(x,2)
         x[:,i]=x[:,i]./norm(x[:,i])
     end    
 end
 
+
 function pcnet(X::AbstractMatrix{T}, p::Int64=3) where T
     n=size(X,2)
     A=1.0 .-Matrix(I,n,n)
-    Threads.@threads for k in 1:n   
+    Threads.@threads for k in 1:n
         y=X[:,k]
         𝒳=X[:,1:end.≠k]
         ϕ=TSVD.tsvd(𝒳,p)[3];
         s=𝒳*ϕ
-        s ./= (norm.(s[:,i] for i=1:size(s,2)).^2)'
-        b=sum(y.*s,dims=1)    
+        s ./= (vecnorm(s).^2)'
+        b=sum(y.*s,dims=1)
         𝒷=ϕ*b'
         @inbounds A[k,A[k,:].==1.0]=𝒷
-    end
-    return A
+    end    
+    return convert(Array{Float16,2},A)
   end
 
-function pcnetsingle(X::AbstractMatrix{T}) where T
-    n=size(X,2)
-    A=1.0 .-Matrix(I,n,n)
-    for k in 1:n
-        y=X[:,k]
-        𝒳=X[:,1:end.≠k]        
-        F=Arpack.svds(𝒳,nsv=4)[1]
-        ϕ=F.V[:,1:3]
-        # _,ϕ=Arpack.eigs(𝒳'𝒳,nev=3,which=:LM)
-        s=𝒳*ϕ
-        s ./=((norm.(s[:,i] for i=1:size(s,2))).^2)'
-        b=sum(y.*s, dims=1)
-        𝒷=ϕ*b'
-        @inbounds A[k,A[k,:].==1.0]=𝒷
-    end
-    return A
-end
-
-function tensordecomp(Λ)
-    𝒯=TensorToolbox.cp_als(Λ,5)
-    𝕏=full(𝒯)
+function tensordecomp(Λ, p::Int64=5)
+    𝒯=TensorToolbox.cp_als(Λ,p)
+    𝕏=TensorToolbox.full(𝒯)
     A=mean(𝕏[:,:,i] for i=1:size(𝕏,3))
     # A ./=maximum(abs.(A))
     # A=round.(A; digits=5)
@@ -68,22 +57,33 @@ function manialn(X,Y)
     V=V[:,1:dim];    
     aln1=V[1:n1,:];
     aln2=V[n1+1:end,:];
-    dd = norm.((aln1.-aln2)[i,:] for i = 1:n1)
+    d = norm.((aln1.-aln2)[i,:] for i = 1:n1)
     # _,idx=findmax(dd)
-    return sortperm(-dd)    
+    return d, aln1, aln2
 end
 
-function sctenifoldnet(X::AbstractMatrix{T}) where T
-    lbsz=sum(X,dims=1)
-    X=(X./lbsz)*median(lbsz)
+function drgenes(d)
+    d²=d.^2
+    FC=d²./mean(d²)
+    pVals = ccdf.(Chisq(1),FC)
+    pAdjusted = MultipleTesting.adjust(pVals, BenjaminiHochberg())
+    return FC,pVals,pAdjusted
+end
+
+function tenrnet(X::AbstractMatrix{T}; donorm::Bool=true) where T
     ℊ,𝒸=size(X)
-    A=zeros(Float64, ℊ, ℊ, 10)
-    for k=1:10
-        # println("network ... $k")
-        𝕩=X[:,randperm(𝒸)][:,1:500]
-        @inbounds A[:,:,k]=pcnet(𝕩')
+    if donorm
+        lbsz=sum(X,dims=1)
+        # X=(X./lbsz)*median(lbsz)
+        X=(X./lbsz)*1e4
+    end    
+    A=zeros(Float16, ℊ, ℊ, NLAYERS)
+    for k=1:NLAYERS
+        println("network ... $k")
+        𝕩=X[:,randperm(𝒸)][:,1:NCELLS]
+        @time @inbounds A[:,:,k]=pcnet(𝕩',NCOMP1)
     end
-    Z=tensordecomp(A)
+    Z=tensordecomp(A,NCOMP2)
     return Z
 end
 
