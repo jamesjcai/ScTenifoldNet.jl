@@ -19,11 +19,11 @@ end
 
 
 function pcnet(X::AbstractMatrix{T}, p::Int=3;
-              scalein::Bool=false, scaleout::Bool=false, 
+              scalein::Bool=true, scaleout::Bool=false, 
               symmout::Bool=false) where T<:Real
     if scalein
         σ=std(X,dims=1)
-        σ(σ.==0).=1
+        σ[σ.==0].=1.0
         X=(X.-mean(X,dims=1))./σ
     end
     ℊ=size(X,2)

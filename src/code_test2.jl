@@ -1,0 +1,31 @@
+cd(dirname(@__FILE__))
+
+include("scTenifoldNet.jl")
+using .scTenifoldNet
+
+using LinearAlgebra, Statistics, Distributions, Random
+
+d=NegativeBinomial(20,0.98)
+X=rand(d,100,2000)
+lbszv=30
+
+Y=copy(X)
+Y[10,:]=Y[50,:]
+Y[11,:]=Y[20,:]
+
+X=X[:,vec(sum(X,dims=1).>lbszv)]
+Y=Y[:,vec(sum(Y,dims=1).>lbszv)]
+
+@show Threads.nthreads()
+
+@time Z0=scTenifoldNet.tenrnet(X, donorm=true)
+@time Z1=scTenifoldNet.tenrnet(Y, donorm=true)
+@time d,aln0,aln1=scTenifoldNet.manialn(Z0,Z1)
+fc,p,adjp=scTenifoldNet.drgenes(d)
+
+@show [adjp[10] adjp[11] adjp[50] adjp[20]];
+@show [adjp[70] adjp[31] adjp[55] adjp[26]];
+
+using StatsPlots
+x=rand(Chisq(1), length(fc)) 
+qqplot(x, fc)
