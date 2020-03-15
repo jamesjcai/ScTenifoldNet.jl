@@ -10,7 +10,7 @@ const NCOMP1,NCOMP2=3,5
 const NLAYERS,NCELLS=10,500
 
 # vecnorm(x) = x./norm.(x[:,i] for i in 1:size(x,2))'
-vecnorm(x) = norm.(x[:,i] for i in 1:size(x,2))
+vecnorm(x::AbstractMatrix) = norm.(x[:,i] for i in 1:size(x,2))
 function vecnorm!(x)
     for i in 1:size(x,2)
         x[:,i]=x[:,i]./norm(x[:,i])
@@ -18,8 +18,9 @@ function vecnorm!(x)
 end
 
 
-function pcnet(X::AbstractArray{T,N}, p::Int=3;
-              scalein=false, scaleout=false, symmout=false) where N where T<:Real
+function pcnet(X::AbstractMatrix{T}, p::Int=3;
+              scalein::Bool=false, scaleout::Bool=false, 
+              symmout::Bool=false) where T<:Real
     if scalein
         σ=std(X,dims=1)
         σ(σ.==0).=1
@@ -43,19 +44,21 @@ function pcnet(X::AbstractArray{T,N}, p::Int=3;
     if scaleout
         A=A./maximum(abs.(A))
     end
-    return convert(Array{Float16,2},A)
+    return convert(Matrix{Float16},A)
   end
 
-function tensordecomp(Λ, p::Int64=5)
+function tensordecomp(Λ::AbstractArray{T,3}, p::Int=5; 
+            scaleout::Bool=false) where T
     𝒯=TensorToolbox.cp_als(Λ,p)
     𝕏=TensorToolbox.full(𝒯)
     A=mean(𝕏[:,:,i] for i=1:size(𝕏,3))
-    # A ./=maximum(abs.(A))
-    # A=round.(A; digits=5)
+    if scaleout
+        A ./=maximum(abs.(A))
+    end
     return A
 end
 
-function manialn(X,Y)
+function manialn(X::AbstractMatrix{T},Y::AbstractMatrix{T}) where T<:Real
     μ,dim=0.9,30
     n1,n2=size(X,1),size(Y,1);
     W₁,W₂=X.+1,Y.+1
@@ -74,7 +77,7 @@ function manialn(X,Y)
     return d, aln1, aln2
 end
 
-function drgenes(d)
+function drgenes(d::AbstractVector{T}) where T<:Real
     d²=d.^2
     FC=d²./mean(d²)
     pVals = ccdf.(Chisq(1),FC)
@@ -82,7 +85,7 @@ function drgenes(d)
     return FC,pVals,pAdjusted
 end
 
-function tenrnet(X::AbstractMatrix{T}; donorm::Bool=true) where T
+function tenrnet(X::AbstractMatrix{T}; donorm::Bool=true) where T<:Real
     ℊ,𝒸=size(X)
     if donorm
         lbsz=sum(X,dims=1)
