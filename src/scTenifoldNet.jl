@@ -18,10 +18,16 @@ function vecnorm!(x)
 end
 
 
-function pcnet(X::AbstractMatrix{T}, p::Int64=3) where T
-    n=size(X,2)
-    A=1.0 .-Matrix(I,n,n)
-    Threads.@threads for k in 1:n
+function pcnet(X::AbstractArray{T,N}, p::Int=3;
+              scalein=false, scaleout=false, symmout=false) where N where T<:Real
+    if scalein
+        σ=std(X,dims=1)
+        σ(σ.==0).=1
+        X=(X.-mean(X,dims=1))./σ
+    end
+    ℊ=size(X,2)
+    A=1.0 .-Matrix(I,ℊ,ℊ)
+    Threads.@threads for k in 1:ℊ
         y=X[:,k]
         𝒳=X[:,1:end.≠k]
         ϕ=TSVD.tsvd(𝒳,p)[3];
@@ -30,7 +36,13 @@ function pcnet(X::AbstractMatrix{T}, p::Int64=3) where T
         b=sum(y.*s,dims=1)
         𝒷=ϕ*b'
         @inbounds A[k,A[k,:].==1.0]=𝒷
-    end    
+    end
+    if symmout
+        A=0.5*(A+A')
+    end
+    if scaleout
+        A=A./maximum(abs.(A))
+    end
     return convert(Array{Float16,2},A)
   end
 
@@ -74,8 +86,8 @@ function tenrnet(X::AbstractMatrix{T}; donorm::Bool=true) where T
     ℊ,𝒸=size(X)
     if donorm
         lbsz=sum(X,dims=1)
-        # X=(X./lbsz)*median(lbsz)
-        X=(X./lbsz)*1e4
+        X=(X./lbsz)*median(lbsz)
+        # X=(X./lbsz)*1e4
     end    
     A=zeros(Float16, ℊ, ℊ, NLAYERS)
     for k=1:NLAYERS
