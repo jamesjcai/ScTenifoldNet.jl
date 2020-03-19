@@ -3,7 +3,7 @@ module scTenifoldNet
 using Statistics, LinearAlgebra, Distributions, MultipleTesting, Random
 import TSVD
 import TensorToolbox
-import KrylovKit
+# import KrylovKit
 
 export tenrnet, manialn, drgenes, tensordecomp
 
@@ -67,9 +67,9 @@ function manialn(X::AbstractMatrix{T},Y::AbstractMatrix{T}) where T<:Real
     μ = μ*(sum(W₁)+sum(W₂)/(2*sum(ℐ)))
     𝕎 = [W₁ μ*ℐ; μ*ℐ' W₂]
     L=diagm(vec(sum(abs.(𝕎),dims=1))).-𝕎
-    λ,V =KrylovKit.eigsolve(L,35,:SR,krylovdim=40)
-    V=hcat(V)
-    # λ,V = eigen(L)
+    # λ,V =KrylovKit.eigsolve(L,35,:SR,krylovdim=40)
+    # V=hcat(V)
+    λ,V = eigen(L)
     i=real(λ).>=1e-8
     V=real(V[:,i])
     dim=min(dim,size(V,2))
@@ -84,7 +84,8 @@ end
 function drgenes(d::AbstractVector{T}) where T<:Real
     d²=d.^2
     FC=d²./mean(d²)
-    pVals = ccdf.(Chisq(1),FC)
+    χ² = Chisq(1)
+    pVals = ccdf.(χ², FC)
     pAdjusted = MultipleTesting.adjust(pVals, BenjaminiHochberg())
     return FC,pVals,pAdjusted
 end
@@ -100,7 +101,8 @@ function tenrnet(X::AbstractMatrix{T}; donorm::Bool=true) where T<:Real
     for k=1:NLAYERS
         println("network ... $k")
         𝕩=X[:,randperm(𝒸)][:,1:NCELLS]
-        @time @inbounds A[:,:,k]=pcnet(𝕩',NCOMP1)
+        𝕩ᵀ=transpose(𝕩)
+        @time @inbounds A[:,:,k]=pcnet(𝕩ᵀ,NCOMP1)
     end
     Z=tensordecomp(A,NCOMP2)
     return Z
