@@ -5,7 +5,7 @@ import TSVD
 import TensorToolbox
 # import KrylovKit
 
-export tenrnet, manialn, drgenes, tensordecomp
+export pcnet, tenrnet, manialn, drgenes, tensordecomp
 
 const NCOMP1,NCOMP2=3,5
 const NLAYERS,NCELLS=10,500
