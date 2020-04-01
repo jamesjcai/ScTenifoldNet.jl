@@ -1,6 +1,6 @@
 module scTenifoldNet
 
-using Statistics, LinearAlgebra, Distributions, MultipleTesting, Random
+using Statistics, LinearAlgebra, Distributions, MultipleTesting, Random, SparseArrays
 import TSVD
 import TensorToolbox
 # import KrylovKit
@@ -102,7 +102,9 @@ function tenrnet(X::AbstractMatrix{T}; donorm::Bool=true) where T<:Real
         println("network ... $k")
         𝕩=X[:,randperm(𝒸)][:,1:NCELLS]
         𝕩ᵀ=transpose(𝕩)
-        @time @inbounds A[:,:,k]=pcnet(𝕩ᵀ,NCOMP1)
+        a=pcnet(𝕩ᵀ,NCOMP1)
+        a[abs.(a).<quantile(vec(abs.(a)),0.95)].=0.0
+        @inbounds A[:,:,k]=sparse(a)
     end
     Z=tensordecomp(A,NCOMP2)
     return Z
