@@ -11,7 +11,8 @@ lbszv=30
 
 Y=copy(X)
 Y[10,:]=Y[50,:]
-Y[11,:]=Y[20,:]
+Y[2,:]=Y[11,:]
+Y[3,:]=Y[5,:]
 
 X=X[:,vec(sum(X,dims=1).>lbszv)]
 Y=Y[:,vec(sum(Y,dims=1).>lbszv)]

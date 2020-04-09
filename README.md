@@ -15,22 +15,17 @@ Requires Julia 1.3 or higher.
 
 ## Usage
 
-The simplest way is to just call the `transform` function with an array of numbers.
+Here is a simple example using randomly generated data.
 
-```
-julia> using scTenifoldNet
-
-julia> X0=rand(100,1000);
-julia> X1=copy(X0)
-julia> X1[4,:].=0.0
-julia> Z0=tenrnet(X0)
-julia> Z1=tenrnet(X1)
-julia> d,aln0,aln1=manialn(Z0,Z1)
-julia> fc,p,adjp=drgenes(d)
-
-julia> using StatsPlots, Distributions
-julia> x=rand(Chisq(1), length(fc)) 
-julia> qqplot(x, fc)
+```{julia}
+using scTenifoldNet
+X0=rand(100,1000);
+X1=copy(X0)
+X1[4,:].=0.0
+Z0=tenrnet(X0)
+Z1=tenrnet(X1)
+d,aln0,aln1=manialn(Z0,Z1)
+fc,p,adjp=drgenes(d)
 ```
 Available functions:
 --------------------
@@ -46,7 +41,7 @@ Available functions:
 Example:
 --------
 #### Loading scTenifoldNet
-Once installed, **scTenifoldNet** can be loaded typing:
+Once installed, **scTenifoldNet.jl** can be loaded typing:
 ```{julia}
 using scTenifoldNet
 ```
@@ -63,7 +58,7 @@ We generate a perturbed network modifying the expression of genes 10, 2, and 3 a
 ```{julia}
 Y=copy(X)
 Y[10,:]=Y[50,:]
-Y[2,:]=Y[21,:]
+Y[2,:]=Y[11,:]
 Y[3,:]=Y[5,:]
 
 X=X[:,vec(sum(X,dims=1).>30)]
@@ -93,19 +88,19 @@ qqplot(x, fc)
 
 Citation
 --------
-To cite **scTenifoldNet** in publications use:
+To cite **scTenifoldNet.jl** in publications use:
 
-  Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Huang and James Cai (2019). scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data. R package version 1.2.0.
-  https://CRAN.R-project.org/package=scTenifoldNet
-
+  Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Huang and James Cai (2019). scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data. Julia version 1.0.
+  https://github.com/jamesjcai/scTenifoldNet.jl
+  
 A BibTeX entry for LaTeX users is
 ```
   @Manual{,
     title = {scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data},
     author = {Daniel Osorio and Yan Zhong and Guanxun Li and Jianhua Huang and James Cai},
-    year = {2019},
-    note = {R package version 1.2.0},
-    url = {https://CRAN.R-project.org/package=scTenifoldNet},
+    year = {2020},
+    note = {Julia version 1.0},
+    url = {https://github.com/jamesjcai/scTenifoldNet.jl},
   }
   ```
 
