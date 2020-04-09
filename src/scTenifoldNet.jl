@@ -12,7 +12,7 @@ const NLAYERS,NCELLS=10,500
 
 # vecnorm(x) = x./norm.(x[:,i] for i in 1:size(x,2))'
 vecnorm(x::AbstractMatrix) = norm.(x[:,i] for i in 1:size(x,2))
-function vecnorm!(x)
+function normc!(x)
     for i in 1:size(x,2)
         x[:,i]=x[:,i]./norm(x[:,i])
     end
@@ -20,7 +20,7 @@ end
 
 
 function pcnet(X::AbstractMatrix{T}, p::Int=3;
-              scalein::Bool=true, scaleout::Bool=false, 
+              scalein::Bool=true, scaleout::Bool=false,
               symmout::Bool=false) where T<:Real
     if scalein
         σ=std(X,dims=1)
@@ -48,7 +48,7 @@ function pcnet(X::AbstractMatrix{T}, p::Int=3;
     return convert(Matrix{Float16},A)
   end
 
-function tensordecomp(Λ::AbstractArray{T,3}, p::Int=5; 
+function tensordecomp(Λ::AbstractArray{T,3}, p::Int=5;
             scaleout::Bool=true) where T
     𝒯=TensorToolbox.cp_als(Λ,p)
     𝕏=TensorToolbox.full(𝒯)
@@ -96,7 +96,7 @@ function tenrnet(X::AbstractMatrix{T}; donorm::Bool=true) where T<:Real
         lbsz=sum(X,dims=1)
         # X=(X./lbsz)*median(lbsz)
         X=(X./lbsz)*1e4
-    end    
+    end
     A=zeros(Float16, ℊ, ℊ, NLAYERS)
     for k=1:NLAYERS
         println("network ... $k")
