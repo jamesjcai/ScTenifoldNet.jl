@@ -78,8 +78,8 @@ fc,p,adjp=scTenifoldNet.drgenes(d)
 ```
 
 #### Plotting the results
-Results can be easily displayed using quantile-quantile plots. Here we labeled in red the identified perturbed genes with FDR < 0.05.
-![Example](https://raw.githubusercontent.com/jamesjcai/scTenifoldNet.jl/master/readmeExample.png)
+Results can be easily displayed using quantile-quantile plots.
+![qqplot](https://raw.githubusercontent.com/jamesjcai/scTenifoldNet.jl/master/readmeExample.png)
 ```{julia}
 using StatsPlots
 x=rand(Chisq(1), length(fc)) 
