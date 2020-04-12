@@ -90,7 +90,7 @@ Citation
 --------
 To cite **scTenifoldNet.jl** in publications use:
 
-  Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Huang and James Cai (2019). scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data. Julia version 1.0.
+  Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Huang and James Cai (2020). scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data. Julia package
   https://github.com/jamesjcai/scTenifoldNet.jl
   
 A BibTeX entry for LaTeX users is
@@ -99,7 +99,7 @@ A BibTeX entry for LaTeX users is
     title = {scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data},
     author = {Daniel Osorio and Yan Zhong and Guanxun Li and Jianhua Huang and James Cai},
     year = {2020},
-    note = {Julia version 1.0},
+    note = {Julia package},
     url = {https://github.com/jamesjcai/scTenifoldNet.jl},
   }
   ```
