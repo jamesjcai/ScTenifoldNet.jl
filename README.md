@@ -20,8 +20,7 @@ Here is a simple example using randomly generated data.
 ```{julia}
 using scTenifoldNet
 X0=rand(100,1000);
-X1=copy(X0)
-X1[4,:].=0.0
+X1=rand(100,1000);
 Z0=tenrnet(X0)
 Z1=tenrnet(X1)
 d,aln0,aln1=manialn(Z0,Z1)
