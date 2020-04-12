@@ -90,17 +90,5 @@ Citation
 --------
 To cite **scTenifoldNet.jl** in publications use:
 
-  Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Huang and James Cai (2020). scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data. Julia package
-  https://github.com/jamesjcai/scTenifoldNet.jl
-  
-A BibTeX entry for LaTeX users is
-```
-  @Manual{,
-    title = {scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data},
-    author = {Daniel Osorio and Yan Zhong and Guanxun Li and Jianhua Huang and James Cai},
-    year = {2020},
-    note = {Julia package},
-    url = {https://github.com/jamesjcai/scTenifoldNet.jl},
-  }
-  ```
-
+Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Z. Huang, James J. Cai. 
+scTenifoldNet: a machine learning workflow for constructing and comparing transcriptome-wide gene regulatory networks from single-cell data. bioRxiv 2020.02.12.931469; doi: https://doi.org/10.1101/2020.02.12.931469
