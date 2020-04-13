@@ -27,8 +27,6 @@ d,aln0,aln1=manialn(Z0,Z1)
 fc,p,adjp=drgenes(d)
 ```
 ## Exported functions
---------------------
-
 |Code| Function |
 |:-|:-|
 |pcnet|Computes a gene regulatory network based on principal component regression|
@@ -38,7 +36,6 @@ fc,p,adjp=drgenes(d)
 |tenrnet|Subsmple cells, construct single-cell gene regulatory networks (scGRNs) using principal component regression (pcnet), and denoise scGRNs using tensor decomposition (tensordecomp).|
 
 ## Example
---------
 #### Loading scTenifoldNet
 Once installed, **scTenifoldNet.jl** can be loaded typing:
 ```{julia}
@@ -86,12 +83,10 @@ qqplot(x, fc)
 ```
 
 ## Citation
---------
 To cite **scTenifoldNet.jl** in publications use:
 
 Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Z. Huang, James J. Cai. 
 scTenifoldNet: a machine learning workflow for constructing and comparing transcriptome-wide gene regulatory networks from single-cell data. bioRxiv 2020.02.12.931469; doi: https://doi.org/10.1101/2020.02.12.931469
 
 ## Author
-
 James Cai -  @jamesjcai - jcai@tamu.edu
