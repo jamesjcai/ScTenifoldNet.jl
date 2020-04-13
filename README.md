@@ -26,7 +26,7 @@ Z1=tenrnet(X1)
 d,aln0,aln1=manialn(Z0,Z1)
 fc,p,adjp=drgenes(d)
 ```
-Available functions:
+## Exported functions
 --------------------
 
 |Code| Function |
@@ -37,7 +37,7 @@ Available functions:
 |drgenes|Evaluates gene differential regulation based on manifold alignment distances|
 |tenrnet|Subsmple cells, construct single-cell gene regulatory networks (scGRNs) using principal component regression (pcnet), and denoise scGRNs using tensor decomposition (tensordecomp).|
 
-Example:
+## Example
 --------
 #### Loading scTenifoldNet
 Once installed, **scTenifoldNet.jl** can be loaded typing:
@@ -85,9 +85,13 @@ x=rand(Chisq(1), length(fc))
 qqplot(x, fc)
 ```
 
-Citation
+## Citation
 --------
 To cite **scTenifoldNet.jl** in publications use:
 
 Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Z. Huang, James J. Cai. 
 scTenifoldNet: a machine learning workflow for constructing and comparing transcriptome-wide gene regulatory networks from single-cell data. bioRxiv 2020.02.12.931469; doi: https://doi.org/10.1101/2020.02.12.931469
+
+## Author
+
+James Cai -  @jamesjcai - jcai@tamu.edu
