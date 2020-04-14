@@ -75,7 +75,7 @@ fc,p,adjp=scTenifoldNet.drgenes(d)
 
 #### Plotting the results
 Results can be easily displayed using quantile-quantile plots. <br /><br />
-![qqplot](https://raw.githubusercontent.com/jamesjcai/scTenifoldNet.jl/master/qq.png =300x)
+![qqplot](https://raw.githubusercontent.com/jamesjcai/scTenifoldNet.jl/master/qq.png)
 ```julia
 using StatsPlots
 x=rand(Chisq(1), length(fc)) 
