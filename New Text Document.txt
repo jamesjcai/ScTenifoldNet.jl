@@ -1,7 +1,0 @@
-# Check for EmpiricalBayes package
-EB_EXISTS = in("EmpiricalBayes",keys(Pkg.installed())) ? true : false
-
-
-Arpack = "7d9fca2a-8960-54d3-9f78-7d1dccf2cb97"
-Distributed = "aaf54ef3-cdf8-58ed-94cc-d582ad619b94"
-StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
