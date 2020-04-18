@@ -1,11 +1,9 @@
 # scTenifoldNet.jl
- scTenifoldNet: constructing and comparing scGRNs from single-cell RNAseq d
+ scTenifoldNet: constructing and comparing scGRNs from single-cell RNAseq (scRNAseq) data
 
 This package provides a Julia implementation of scTenifoldNet.
 See [bioRxiv - scTenifoldNet: a machine learning workflow for constructing and comparing transcriptome-wide gene regulatory networks from single-cell data](https://doi.org/10.1101/2020.02.12.931469)
 for more information.
-
-Requires Julia 1.3 or higher.
 
 ## Installation
 
