@@ -31,7 +31,7 @@ fc,p,adjp=drgenes(d)
 |tensordecomp|Performs CANDECOMP/PARAFAC (CP) Tensor Decomposition|
 |manialn|Performs non-linear manifold alignment of two gene regulatory networks|
 |drgenes|Evaluates gene differential regulation based on manifold alignment distances|
-|tenrnet|Subsmple cells, construct single-cell gene regulatory networks (scGRNs) using principal component regression (pcnet), and denoise scGRNs using tensor decomposition (tensordecomp).|
+|tenrnet|Subsamples cells, constructs single-cell gene regulatory networks (scGRNs) using principal component regression (pcnet), and denoises scGRNs using tensor decomposition (tensordecomp).|
 
 ## Example
 #### Loading scTenifoldNet
