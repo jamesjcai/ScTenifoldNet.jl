@@ -21,6 +21,8 @@ Y=Y[:,vec(sum(Y,dims=1).>lbszv)]
 
 @time Z0=scTenifoldNet.tenrnet(X, donorm=true)
 @time Z1=scTenifoldNet.tenrnet(Y, donorm=true)
+Z0=0.5*(Z0+Z0')
+Z1=0.5*(Z1+Z1')
 @time d,aln0,aln1=scTenifoldNet.manialn(Z0,Z1)
 fc,p,adjp=scTenifoldNet.drgenes(d)
 

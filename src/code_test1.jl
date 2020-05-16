@@ -10,6 +10,8 @@ X1[4,:].=0.0
 
 @time Z0=scTenifoldNet.tenrnet(X0, donorm=false)
 @time Z1=scTenifoldNet.tenrnet(X1, donorm=false)
+Z0=0.5*(Z0+Z0')
+Z1=0.5*(Z1+Z1')
 @time d,aln0,aln1=scTenifoldNet.manialn(Z0,Z1)
 fc,p,adjp=scTenifoldNet.drgenes(d)
 
