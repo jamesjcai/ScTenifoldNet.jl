@@ -5,7 +5,7 @@ import TSVD
 import TensorToolbox
 # import KrylovKit
 
-export pcnet, tenrnet, manialn, drgenes, tensordecomp
+export pcnet, tenrnet, manialn, drgenes, tensordecomp, sctenifoldnet
 
 const NCOMP1,NCOMP2=3,5
 const NLAYERS,NCELLS=10,500
@@ -78,7 +78,7 @@ function manialn(X::AbstractMatrix{T},Y::AbstractMatrix{T}) where T<:Real
     aln1=V[n1+1:end,:]
     d = norm.((aln0.-aln1)[i,:] for i = 1:n1)
     # _,idx=findmax(dd)
-    return d, aln0, aln1
+    return d
 end
 
 function drgenes(d::AbstractVector{T}) where T<:Real
@@ -100,7 +100,8 @@ function tenrnet(X::AbstractMatrix{T}; donorm::Bool=true) where T<:Real
     A=zeros(Float16, ℊ, ℊ, NLAYERS)
     for k=1:NLAYERS
         println("network ... $k")
-        𝕩=X[:,randperm(𝒸)][:,1:NCELLS]
+        # 𝕩=X[:,randperm(𝒸)][:,1:NCELLS]    # jackknife (m-out-of-n)
+        𝕩=X[:,rand(1:𝒸,NCELLS)];            # bootstrapping (m-out-of-n)
         𝕩ᵀ=transpose(𝕩)
         a=pcnet(𝕩ᵀ,NCOMP1)
         a[abs.(a).<quantile(vec(abs.(a)),0.95)].=0.0
@@ -108,6 +109,16 @@ function tenrnet(X::AbstractMatrix{T}; donorm::Bool=true) where T<:Real
     end
     Z=tensordecomp(A,NCOMP2)
     return Z
+end
+
+function sctenifoldnet(X::AbstractMatrix{T}, Y::AbstractMatrix{T}; donorm::Bool=false) where T<:Real
+    Z0=tenrnet(X,donorm=donorm)
+    Z1=tenrnet(Y,donorm=donorm)
+    Z0=0.5*(Z0+Z0')
+    Z1=0.5*(Z1+Z1')
+    d=manialn(Z0,Z1)
+    fc,p,adjp=drgenes(d)
+    return fc,p,adjp
 end
 
 end # module
