@@ -7,7 +7,7 @@ X1=copy(X0)
 X1[4,:].=0.0
 
 
-fc,p,adjp=scTenifoldNet.sctenifoldnet(X0,X1,donorm=false)
+d,fc,p,adjp=scTenifoldNet.sctenifoldnet(X0,X1,donorm=false)
 
 #@show Threads.nthreads()
 #@time Z0=scTenifoldNet.tenrnet(X0, donorm=false)
