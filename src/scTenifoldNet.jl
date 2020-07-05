@@ -18,7 +18,6 @@ function normc!(x)
     end
 end
 
-
 function pcnet(X::AbstractMatrix{T}, p::Int=3;
               scalein::Bool=true, scaleout::Bool=false,
               symmout::Bool=false) where T<:Real
@@ -83,11 +82,11 @@ end
 
 function drgenes(d::AbstractVector{T}) where T<:Real
     d²=d.^2
-    FC=d²./mean(d²)
+    fc=d²./mean(d²)
     χ² = Chisq(1)
-    pVals = ccdf.(χ², FC)
+    pVals = ccdf.(χ², fc)
     pAdjusted = MultipleTesting.adjust(pVals, BenjaminiHochberg())
-    return FC,pVals,pAdjusted
+    return fc,pVals,pAdjusted
 end
 
 function tenrnet(X::AbstractMatrix{T}; donorm::Bool=true) where T<:Real
@@ -118,7 +117,7 @@ function sctenifoldnet(X::AbstractMatrix{T}, Y::AbstractMatrix{T}; donorm::Bool=
     Z1=0.5*(Z1+Z1')
     d=manialn(Z0,Z1)
     fc,p,adjp=drgenes(d)
-    return fc,p,adjp
+    return d,fc,p,adjp
 end
 
 end # module
