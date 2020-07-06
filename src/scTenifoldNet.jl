@@ -99,8 +99,8 @@ function tenrnet(X::AbstractMatrix{T}; donorm::Bool=true) where T<:Real
     A=zeros(Float16, ℊ, ℊ, NLAYERS)
     for k=1:NLAYERS
         println("network ... $k")
-        # 𝕩=X[:,randperm(𝒸)][:,1:NCELLS]    # jackknife (m-out-of-n)
-        𝕩=X[:,rand(1:𝒸,NCELLS)];            # bootstrapping (m-out-of-n)
+        𝕩=X[:,randperm(𝒸)][:,1:NCELLS]    # jackknife (m-out-of-n)
+        # 𝕩=X[:,rand(1:𝒸,NCELLS)];            # bootstrapping (m-out-of-n)
         𝕩ᵀ=transpose(𝕩)
         a=pcnet(𝕩ᵀ,NCOMP1)
         a[abs.(a).<quantile(vec(abs.(a)),0.95)].=0.0
