@@ -1,4 +1,4 @@
-module scTenifoldNet
+module ScTenifoldNet
 
 using Statistics, LinearAlgebra, Distributions, MultipleTesting, Random, SparseArrays
 import TSVD

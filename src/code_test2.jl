@@ -1,7 +1,7 @@
 cd(dirname(@__FILE__))
 
-include("scTenifoldNet.jl")
-using .scTenifoldNet
+include("ScTenifoldNet.jl")
+using .ScTenifoldNet
 
 using LinearAlgebra, Statistics, Distributions, Random
 
@@ -19,12 +19,12 @@ Y=Y[:,vec(sum(Y,dims=1).>lbszv)]
 
 @show Threads.nthreads()
 
-@time Z0=scTenifoldNet.tenrnet(X, donorm=true)
-@time Z1=scTenifoldNet.tenrnet(Y, donorm=true)
+@time Z0=ScTenifoldNet.tenrnet(X, donorm=true)
+@time Z1=ScTenifoldNet.tenrnet(Y, donorm=true)
 Z0=0.5*(Z0+Z0')
 Z1=0.5*(Z1+Z1')
-@time d=scTenifoldNet.manialn(Z0,Z1)
-fc,p,adjp=scTenifoldNet.drgenes(d)
+@time d=ScTenifoldNet.manialn(Z0,Z1)
+fc,p,adjp=ScTenifoldNet.drgenes(d)
 
 @show [adjp[10] adjp[11] adjp[50] adjp[20]];
 @show [adjp[70] adjp[31] adjp[55] adjp[26]];
