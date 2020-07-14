@@ -34,7 +34,7 @@ fc,p,adjp=drgenes(d)
 |tenrnet|Subsamples cells, constructs single-cell gene regulatory networks (scGRNs) using principal component regression (pcnet), and denoises scGRNs using tensor decomposition (tensordecomp).|
 
 ## Example
-#### Loading scTenifoldNet
+#### Loading ScTenifoldNet
 Once installed, **ScTenifoldNet.jl** can be loaded typing:
 ```julia
 using ScTenifoldNet
