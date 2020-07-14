@@ -1,4 +1,4 @@
-# scTenifoldNet.jl
+# ScTenifoldNet.jl
  scTenifoldNet: constructing and comparing scGRNs from single-cell RNAseq (scRNAseq) data
 
 This package provides a Julia implementation of scTenifoldNet.
@@ -8,7 +8,7 @@ for more information.
 ## Installation
 
 ```jl
-] add https://github.com/jamesjcai/scTenifoldNet.jl
+] add https://github.com/jamesjcai/ScTenifoldNet.jl
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ for more information.
 Here is a simple example using randomly generated data.
 
 ```jl
-using scTenifoldNet
+using ScTenifoldNet
 X0=rand(100,1000);
 X1=rand(100,1000);
 Z0=tenrnet(X0)
@@ -35,9 +35,9 @@ fc,p,adjp=drgenes(d)
 
 ## Example
 #### Loading scTenifoldNet
-Once installed, **scTenifoldNet.jl** can be loaded typing:
+Once installed, **ScTenifoldNet.jl** can be loaded typing:
 ```julia
-using scTenifoldNet
+using ScTenifoldNet
 ```
 
 #### Simulating of a dataset 
@@ -58,8 +58,8 @@ Y[3,:]=Y[5,:]
 X=X[:,vec(sum(X,dims=1).>30)]
 Y=Y[:,vec(sum(Y,dims=1).>30)]
 ```
-#### scTenifoldNet
-Here we run **scTenifoldNet** under the H0 (there is no change in the regulation of the gene) using the same matrix as input and under the HA (there is a change in the regulation of the genes) using the control and the perturbed network.
+#### ScTenifoldNet
+Here we run **ScTenifoldNet** under the H0 (there is no change in the regulation of the gene) using the same matrix as input and under the HA (there is a change in the regulation of the genes) using the control and the perturbed network.
 ```julia
 Z0=scTenifoldNet.tenrnet(X, donorm=true)
 Z1=scTenifoldNet.tenrnet(Y, donorm=true)
@@ -81,7 +81,7 @@ qqplot(x, fc)
 ```
 
 ## Citation
-To cite **scTenifoldNet.jl** in publications use:
+To cite **ScTenifoldNet.jl** in publications use:
 
 Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Z. Huang, James J. Cai. 
 scTenifoldNet: a machine learning workflow for constructing and comparing transcriptome-wide gene regulatory networks from single-cell data. bioRxiv 2020.02.12.931469; doi: https://doi.org/10.1101/2020.02.12.931469
