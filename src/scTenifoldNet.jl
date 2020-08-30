@@ -63,7 +63,7 @@ function manialn(X::AbstractMatrix{T},Y::AbstractMatrix{T}) where T<:Real
     n1,n2=size(X,1),size(Y,1)
     W₁,W₂=X.+1,Y.+1
     ℐ=Matrix(I,n1,n2)
-    μ = μ*(sum(W₁)+sum(W₂)/(2*sum(ℐ)))
+    μ = μ*(sum(W₁)+sum(W₂))/(2*sum(ℐ))
     𝕎 = [W₁ μ*ℐ; μ*ℐ' W₂]
     L=diagm(vec(sum(abs.(𝕎),dims=1))).-𝕎
     # λ,V =KrylovKit.eigsolve(L,35,:SR,krylovdim=40)
